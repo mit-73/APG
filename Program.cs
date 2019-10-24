@@ -27,19 +27,20 @@ namespace APG
         {
             Console.Write("Enter the keyword: ");
             string keyword = Console.ReadLine();
-
+            
             Console.Write("Enter the domain of the site: ");
             string domain = Console.ReadLine();
-
-            Console.Write("Add a special symbol? Yes or no: ");
+            
+            Console.Write("Enter the special symbol ((( ! \" # $ % & \' ( ) * + , - . / : ; < = > ? @ [ \\ ] ^ _` { | } ~ Null )))‎:");
             string symbol = Console.ReadLine();
-
+            
             Console.Write($"Your password: {generator.Start(keyword, domain, symbol)}");
         }
 
         public static void RunWithArgs(Generator generator, string[] args)
         {
             string keyword = null, domain = null, symbol = "yes";
+            
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i] == "-keyword")
@@ -55,7 +56,7 @@ namespace APG
                     Console.WriteLine($"Domain: {domain}");
                     continue;
                 }
-
+                
                 if (args[i] == "-symbol")
                 {
                     symbol = args[i + 1];

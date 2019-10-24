@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -8,39 +9,48 @@ namespace APG
     {
         public string Start(string keyword, string domain, string symbol)
         {
-            string password = LastDomainLetter(new StringBuilder(domain)).ToUpper() + GenerateSpecialSymbol(symbol) +
+            string password = GetLastDomainLetter(new StringBuilder(domain)) + GetSpecialSymbol(symbol) +
                               keyword +
                               keyword.Reverse().Aggregate(string.Empty, (acc, ch) => acc + ch) +
-                              DomainLetterLength(domain);
+                              GetDomainLength(domain);
 
-            return RemoveLetters(new StringBuilder(password), new StringBuilder(domain));
+            return RemoveRepetitiveLetters(new StringBuilder(password), new StringBuilder(domain));
         }
 
 
-        private string LastDomainLetter(StringBuilder domain)
+        private string GetLastDomainLetter(StringBuilder domain)
         {
             string tempChar = "";
 
             for (int i = 0; i < domain.Length; i++)
             {
-                if (domain[i] != '.')
+                if (domain[i] == '.')
                 {
-                    tempChar = domain[i].ToString();
+                    tempChar += domain[i-1].ToString();
                 }
-                else break;
             }
 
-            return tempChar;
+            return tempChar.ToUpper();
         }
 
-        private string GenerateSpecialSymbol(string symbol)
+        private string GetSpecialSymbol(string symbol)
         {
-            if (Equals(symbol.ToLower(), "yes") || Equals(symbol, "1") || Equals(symbol.ToLower(), "true")) return "!";
+            List<string> tempSymbols = new List<string>{ "!", "\"", "#", "$", "%", "&", "\'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~"};
+            
+            if (!Equals(symbol.ToLower(), ""))
+            {
+                foreach (var tempSymbol in tempSymbols)
+                {
+                    if (Equals(symbol.ToLower(), tempSymbol.ToLower())) return symbol;
+                }
+                
+                return "";
+            }
 
             return "";
         }
 
-        private int DomainLetterLength(string domain)
+        private int GetDomainLength(string domain)
         {
             int count = 0;
             foreach (var letter in domain)
@@ -49,7 +59,7 @@ namespace APG
             return count;
         }
 
-        private string RemoveLetters(StringBuilder password, StringBuilder domain)
+        private string RemoveRepetitiveLetters(StringBuilder password, StringBuilder domain)
         {
             string temp = password.ToString();
 
